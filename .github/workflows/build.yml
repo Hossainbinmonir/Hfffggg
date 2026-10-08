@@ -1,0 +1,40 @@
+name: Build Android APK from ZIP
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Extract Project ZIP
+      run: |
+        unzip -o "Deepnote-oct-9-2026-3-43-49-am.zip"
+        # ফাইলগুলো ফোল্ডারে থাকলে বাইরে বের করে আনা
+        if [ ! -d "app" ]; then
+          mv Deepnote*/* . 2>/dev/null || mv */* . 2>/dev/null || true
+        fi
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+
+    - name: Build Debug APK
+      run: gradle assembleDebug --no-daemon
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug
+        path: '**/build/outputs/apk/debug/*.apk'
