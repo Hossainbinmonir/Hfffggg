@@ -15,7 +15,7 @@ jobs:
 
     - name: Extract Project ZIP
       run: |
-        unzip -o "deepnote-oct-9-2026-3-43-49-am.zip"
+        unzip -o "mickey-oct-9-2026-6-05-23-am.zip"
         if [ ! -d "app" ]; then
           mv Deepnote*/* . 2>/dev/null || mv */* . 2>/dev/null || true
         fi
